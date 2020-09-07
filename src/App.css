@@ -11,7 +11,7 @@
   clip-path: polygon(0 10%, 100% 0, 100% 100%, 0% 100%);
   margin-bottom: 0px;
 }
-.card {
+.card1 {
   background-color: #3a40d4;
   border-color: grey;
 }
@@ -26,4 +26,8 @@
   border-color: #ea7773;
 
   margin-bottom: 0px;
+}
+
+.bgCard {
+  background-color: #3a40d4;
 }
