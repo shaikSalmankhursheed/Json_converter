@@ -1,0 +1,29 @@
+.overlap {
+  position: relative;
+}
+.jumbo1 {
+  background: white;
+  margin-bottom: 0px;
+}
+
+.jumbo2 {
+  background-color: #3a40d4;
+  clip-path: polygon(0 10%, 100% 0, 100% 100%, 0% 100%);
+  margin-bottom: 0px;
+}
+.card {
+  background-color: #3a40d4;
+  border-color: grey;
+}
+.jumbo4 {
+  background-color: #314659;
+  margin-bottom: 0px;
+}
+
+.jumbo3 {
+  background-color: #3a40d4;
+  border-style: solid;
+  border-color: #ea7773;
+
+  margin-bottom: 0px;
+}
