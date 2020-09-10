@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import firebase from "firebase/app";
+import { toast } from "react-toastify";
+import { UserContext } from "../Context/UserContext";
 
 import {
   Container,
@@ -20,14 +23,49 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 const Signin = () => {
+  const context = useContext(UserContext);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const Signin = () => {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then((res) => {
+        console.log(res);
+
+        context.setUser({
+          email: res.user.email,
+          // uid: res.user.uid,
+        });
+        window.sessionStorage.setItem("email", res.user.email);
+        toast(`Welcome back !`, {
+          type: "success",
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        toast(error.message, {
+          type: "error",
+        });
+      });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    Signin();
+  };
+
+  if (context.user?.email) {
+    return <Redirect to="/" />;
+  }
+
   return (
     <Container fluid className="text-center p-5 mt-3 mb-5 bgCard">
       <Row>
         <Col lg={6} className="offset-lg-3 mt-5 ">
           <Card>
-            <Form
-            // onSubmit={handleSubmit}
-            >
+            <Form onSubmit={handleSubmit}>
               <CardHeader className="">Signin here</CardHeader>
               <CardBody>
                 <FormGroup row>
@@ -40,8 +78,8 @@ const Signin = () => {
                       name="email"
                       id="email"
                       placeholder="provide your email"
-                      //   value={email}
-                      //   onChange={(e) => setEmail(e.target.value)}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                   </Col>
                 </FormGroup>
@@ -55,8 +93,8 @@ const Signin = () => {
                       name="password"
                       id="password"
                       placeholder="your password here"
-                      //   value={password}
-                      //   onChange={(e) => setPassword(e.target.value)}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </Col>
                 </FormGroup>

@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { UserContext } from "../Context/UserContext";
+import firebase from "firebase/app";
+import { toast } from "react-toastify";
+
 import {
   Container,
   Row,
@@ -15,16 +19,52 @@ import {
   CardFooter,
   Button,
 } from "reactstrap";
+import { Redirect } from "react-router-dom";
 
 const Signup = () => {
+  const context = useContext(UserContext);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const Signup = () => {
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then((res) => {
+        console.log(res);
+        context.setUser({
+          email: res.user.email,
+          // uid: res.user.uid,
+        });
+
+        window.sessionStorage.setItem("email", res.user.email);
+
+        toast(`Signup Successful and loggedin`, {
+          type: "success",
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        toast(error.message, {
+          type: "error",
+        });
+      });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    Signup();
+  };
+  if (context.user?.email) {
+    return <Redirect to="/" />;
+  }
+
   return (
     <Container fluid className="text-center p-5 mt-3 mb-5 bgCard">
       <Row>
         <Col lg={6} className="offset-lg-3 mt-5 ">
           <Card>
-            <Form
-            // onSubmit={handleSubmit}
-            >
+            <Form onSubmit={handleSubmit}>
               <CardHeader className="">Signup here</CardHeader>
               <CardBody>
                 <FormGroup row>
@@ -37,8 +77,8 @@ const Signup = () => {
                       name="email"
                       id="email"
                       placeholder="provide your email"
-                      //   value={email}
-                      //   onChange={(e) => setEmail(e.target.value)}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                   </Col>
                 </FormGroup>
@@ -52,8 +92,8 @@ const Signup = () => {
                       name="password"
                       id="password"
                       placeholder="your password here"
-                      //   value={password}
-                      //   onChange={(e) => setPassword(e.target.value)}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </Col>
                 </FormGroup>
